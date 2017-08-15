@@ -1,4 +1,5 @@
 <?php
+include "application/plagins/model_vk.php";
 /*
 структура таблицы
 users_id идентификатор
@@ -40,8 +41,9 @@ class Model_Login extends Model
 			'scope' => 'offline,email,wall',
 			'response_type' => 'code',			
 		);
-		
-		$data["vklink"] = $url.'?'.urldecode(http_build_query($params));
+		$vk = new Model_vk();
+		//$data["vklink"] = $url.'?'.urldecode(http_build_query($params));
+		$data["vklink"] = $vk->get_url_autorize($redirect_uri);
 		
 		return $data;
 	}
@@ -71,26 +73,10 @@ class Model_Login extends Model
 	public function get_authVK ()
 	{
 		$redirect_uri = $this->siteUrl.'login/authVK'; // Адрес сайта		
-		if (isset($_GET['code'])) 
+		$vk = new Model_vk();
+		$userInfo = $vk->get_authVK($redirect_uri);
+		if ($userInfo)
 		{
-			$params = array(
-				'client_id' => $this->client_id,
-				'client_secret' => $this->client_secret,
-				'code' => $_GET['code'],
-				'redirect_uri' => $redirect_uri
-			);
-
-			$token = json_decode(file_get_contents('https://oauth.vk.com/access_token' . '?' . urldecode(http_build_query($params))), true);
-
-			if (isset($token['access_token'])) {
-				$params = array(
-					'uids'         => $token['user_id'],
-					'fields'       => 'uid,first_name,last_name,screen_name,sex,bdate,photo_big',
-					'access_token' => $token['access_token']
-				);
-
-				$userInfo = json_decode(file_get_contents('https://api.vk.com/method/users.get' . '?' . urldecode(http_build_query($params))), true);
-			}		
 			$login = $userInfo["response"][0]["last_name"]." ".$userInfo["response"][0]["first_name"];
 			$sql = "SELECT user_id FROM ".$this->table_name." WHERE social_id = '".$userInfo["response"][0]["uid"]."' and social = 'vk'";
 			$user = $this->db->GetOne($sql, 0);
