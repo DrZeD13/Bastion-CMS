@@ -15,8 +15,6 @@ class Model_Login extends Model
 {
 
 	private $table_name = 'users';
-	private $client_id = '5344724'; // ID приложения (vk.com)
-	private $client_secret = 'AMGBWiIV5hgYu63Elkf5'; // Защищённый ключ
 	
 	public function get_data() 
 	{
@@ -33,14 +31,6 @@ class Model_Login extends Model
 		
 		
 		$redirect_uri = $this->siteUrl.'login/authVK'; // Адрес сайта		
-		$url = 'http://oauth.vk.com/authorize';
-
-		$params = array(
-			'client_id'     => $this->client_id,
-			'redirect_uri'  => $redirect_uri,
-			'scope' => 'offline,email,wall',
-			'response_type' => 'code',			
-		);
 		$vk = new Model_Vk();
 		//$data["vklink"] = $url.'?'.urldecode(http_build_query($params));
 		$data["vklink"] = $vk->get_url_autorize($redirect_uri);
@@ -309,23 +299,6 @@ class Model_Login extends Model
         }
 
 	}
-	
-	/*public function get_registrationVK()
-	{
-		$client_id = '5344724'; // ID приложения
-		$client_secret = 'AMGBWiIV5hgYu63Elkf5'; // Защищённый ключ
-		$redirect_uri = $this->siteUrl; // Адрес сайта
-		
-		$url = 'http://oauth.vk.com/authorize';
-
-		$params = array(
-			'client_id'     => $client_id,
-			'redirect_uri'  => $redirect_uri,
-			'response_type' => 'code'
-		);
-		
-		echo $link = '<p><a href="' . $url . '?' . urldecode(http_build_query($params)) . '">Аутентификация через ВКонтакте</a></p>';
-	}*/
 	
 	public function get_activate()
 	{
