@@ -41,7 +41,7 @@ class Model_Login extends Model
 			'scope' => 'offline,email,wall',
 			'response_type' => 'code',			
 		);
-		$vk = new Model_vk();
+		$vk = new Model_Vk();
 		//$data["vklink"] = $url.'?'.urldecode(http_build_query($params));
 		$data["vklink"] = $vk->get_url_autorize($redirect_uri);
 		
@@ -73,7 +73,7 @@ class Model_Login extends Model
 	public function get_authVK ()
 	{
 		$redirect_uri = $this->siteUrl.'login/authVK'; // Адрес сайта		
-		$vk = new Model_vk();
+		$vk = new Model_Vk();
 		$userInfo = $vk->get_authVK($redirect_uri);
 		if ($userInfo)
 		{
