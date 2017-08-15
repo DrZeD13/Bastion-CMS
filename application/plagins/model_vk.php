@@ -3,7 +3,7 @@
 class Model_Vk
 {
 	private $client_id = '5344724'; // ID приложения (vk.com)
-	private $client_secret = 'AMGBWiIV5hgYu63Elkf5'; // Защищённый ключ
+	private $client_secret = ''; // Защищённый ключ
 	
 	function __construct()
 	{
