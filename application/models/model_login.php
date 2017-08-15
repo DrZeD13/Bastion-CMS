@@ -32,7 +32,6 @@ class Model_Login extends Model
 		
 		$redirect_uri = $this->siteUrl.'login/authVK'; // Адрес сайта		
 		$vk = new Model_Vk();
-		//$data["vklink"] = $url.'?'.urldecode(http_build_query($params));
 		$data["vklink"] = $vk->get_url_autorize($redirect_uri);
 		
 		return $data;
