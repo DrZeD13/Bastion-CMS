@@ -84,6 +84,12 @@ $ADMIN_PAGES = array (
     'icon' => '<i class="fa fa-commenting-o"></i>',
 	'parent' => '',   
   ),
+  'spam' => 
+  array (
+    'title' => 'Спам',
+    'icon' => '<i class="fa fa-exclamation-triangle"></i>',
+	'parent' => '',   
+  ),
   'services' => 
   array (
     'title' => 'Услуги',

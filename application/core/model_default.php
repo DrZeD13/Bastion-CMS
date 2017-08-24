@@ -247,6 +247,7 @@ class Model_Default
 			{
 				$ip = ip2long($ip);	
 				$data = array (
+					"news_date" => time(),
 					"start" => $ip,
 					"end" => $ip
 				);
@@ -1567,6 +1568,7 @@ class Model_Default
 		if (!$this->Get_Spam($row["ip"]))
 		{
 			$data = array (
+				"news_date" => time(),
 				"start" => ip2long($row["ip"]),
 				"end" => ip2long($row["ip"])
 			);
