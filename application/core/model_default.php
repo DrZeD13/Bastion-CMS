@@ -188,6 +188,9 @@ class Model_Default
 			case "del":
 				$this->Mas_Del();
 			break;
+			case "spam":
+				$this->Mas_Spam();
+			break;
 		}
 		$this->Redirect ("/adm/".$this->table_name);
 	}
@@ -222,6 +225,36 @@ class Model_Default
 	function Mas_Del()
 	{
 		$sqlin = $this->GetInSQLString();
+		if (!empty($sqlin))
+		{
+			$sqlin = rtrim($sqlin, ",");
+			$sql = "DELETE FROM ".$this->table_name." WHERE {$this->primary_key} IN (".$sqlin.")";
+			$this->db->ExecuteSql($sql);
+		}
+	}
+	
+	// Выполняет массовое удаление записей и базы данных
+	function Mas_Spam()
+	{
+		$i = 0;
+		$sqlin = "";
+		while (isset($_POST['itemid'][$i]))
+		{
+			$sqlin .= (int)$_POST['itemid'][$i].",";			
+			$sql = "SELECT ip FROM ".$this->table_name." WHERE ".$this->primary_key." = '".(int)$_POST['itemid'][$i]."'";
+			$ip = $this->db->GetOne($sql);			
+			if (!$this->Get_Spam($ip))
+			{
+				$ip = ip2long($ip);	
+				$data = array (
+					"start" => $ip,
+					"end" => $ip
+				);
+				$sql = "Insert Into spam ".ArrayInInsertSQL ($data);
+				$this->db->ExecuteSql($sql);
+			}			
+			$i++;
+		}		
 		if (!empty($sqlin))
 		{
 			$sqlin = rtrim($sqlin, ",");
@@ -1063,7 +1096,7 @@ class Model_Default
         else {
 			$user_id = $this->GetCookie("id", 1);			
 			// если есть ссылка в коммнтарии делаем её не активной
-			if (stristr($comment, '//'))
+			if ((stristr($comment, '//')) or ($this->Get_Spam($_SERVER['REMOTE_ADDR'])))
 			{
 				$is_ative = 0;
 			}
@@ -1077,6 +1110,22 @@ class Model_Default
         }
    }
 	
+	// возврщает true если ip адрес есть в спам базе, false в противном случае
+	// $ip - ip пользователя 
+	function Get_Spam($ip)
+	{
+		$ip = ip2long($ip);
+		$sql = "SELECT Count(*) FROM spam WHERE ($ip >= start) and ($ip <= end)";
+		$total = $this->db->GetOne($sql, 0);
+		if ($total > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 	// формирует массив вывода формы комментарие для авторизированных и нет пользователей
 	// $id - id записи к которой добавляетя комментарий
 	function GetFormComment($id)
@@ -1507,6 +1556,29 @@ class Model_Default
         }
         return false;
     }
+	
+	// удаляет запись и добавляет в спам
+	function spam()
+	{					
+		$this->GetToken();
+		$id = $this->GetGP ("id");
+		$sql = "SELECT name, ip FROM ".$this->table_name." WHERE ".$this->primary_key." = '".$id."'";
+		$row = $this->db->GetEntry($sql);
+		if (!$this->Get_Spam($row["ip"]))
+		{
+			$data = array (
+				"start" => ip2long($row["ip"]),
+				"end" => ip2long($row["ip"])
+			);
+			$sql = "Insert Into spam ".ArrayInInsertSQL ($data);
+			$this->db->ExecuteSql($sql);
+		}
+		$name = $row["name"];
+		
+		$this->history("Спам", $this->table_name, $name, $id);
+		$this->delElement($this->primary_key);
+		$this->Redirect ("/adm/".$this->table_name);
+	}
 	
 	// удаляет запись из базы данных
 	// $name_id - id записи

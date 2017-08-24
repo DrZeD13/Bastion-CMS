@@ -51,6 +51,12 @@ class Controller_Adm_Message extends Controller
 		$this->action_index();
 	}
 	
+	function action_spam()
+	{
+		$this->model->spam();
+		$this->action_index();
+	}
+	
 	function action_insert()
 	{
 		if ($this->model->Insert())

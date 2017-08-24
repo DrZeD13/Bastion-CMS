@@ -91,6 +91,7 @@ class Model_Adm_Message extends Model
 					"active_img" => ($row['is_active'] == 0)?"times":"check",
                     "edit" => "/adm/".$this->table_name."/edit?id=".$id,
                     "del" => "/adm/".$this->table_name."/del?id=".$id."&token=".$token,
+					"spam" => "/adm/".$this->table_name."/spam?id=".$id."&token=".$token,
 					"status" => ($row['is_active'] == 1)?"success":"danger",
 				);						
 			}

@@ -48,7 +48,8 @@
 				   <td><?=$data['ip']?></td>
 				   <td><?=$data['link']?></td>
 				   
-				   <td width="15"><?=$data['is_active']?></td>
+				   <td width="15">&nbsp;</td>
+				   <td width="15"><?=$data['is_active']?></td>				   
 				   <td width="15">&nbsp;</td>
 				   <td width="15">&nbsp;</td>
 				</thead>
@@ -79,6 +80,9 @@
 							<a href="<?=$row['link']?>" target="_blank"><?=$row['linktitle']?></a>
 						</td>
 						<td>
+							<a class="spam" href="<?=$row['spam']?>" title="Добавить в спам"><i class="fa fa-exclamation-triangle"></i></a>
+						</td>
+						<td>
 							<a class="<?=$row['active_img']?>" href="<?=$row['active']?>" title="Изменить статус"><i class="fa fa-<?=$row['active_img']?>"></i></a>
 						</td>
 						<td>
@@ -94,7 +98,7 @@
 				}
 				else
 				{?>
-					<tr><td colspan="8" align="center"><?=$data['empty_row']?></td></tr>
+					<tr><td colspan="9" align="center"><?=$data['empty_row']?></td></tr>
 				<?}?>
 			</tbody>
 			</table>
@@ -108,6 +112,7 @@
 				<select name="mas_action">
 					<option value="active" selected="">Активный</option>
 					<option value="notactive">Неактивный</option>
+					<option value="spam">Спам</option>
 					<option value="del">Удалить</option>
 				</select>
 				<input type="hidden" name="action" value="mas" />
