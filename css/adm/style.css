@@ -6,6 +6,8 @@ h1{margin:0;font-size:24px}
 .t_new{color:#d9534f}
 .edit{color:#449d44}
 .edit:hover{color:#5cb85c}
+.spam{color:#f0ad4e}
+.spam:hover{color:#f3bb6c}
 .savenew:hover,.add:hover{color:#fff;background-color:#449d44;border-color:#398439;text-decoration:none}
 .error{color:#d9534f;font-family:'Play',sans-serif;font-size:12px}
 .cancel{color:#fff;background-color:#d9534f;border-color:#d43f3a}
