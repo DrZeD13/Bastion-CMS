@@ -228,9 +228,9 @@ class Model_Main extends Model
         $email = $this->enc ($this->GetValidGP ("email", "Email адрес", VALIDATE_EMAIL));
         $mes_content = $this->GetValidGP ("mes_content", "Текст вашего сообщения", VALIDATE_NOT_EMPTY);
         /*@@@-- Begin: kcaptcha --@@@@@@@@@@@*/
-        $code = $this->GetGP("keystring", "хрен");
+        $code = $this->GetGP("g-recaptcha-response", "хрен");
 		$flag = $this->ChecCode($code);		
-		if (!$flag) {$this->SetError("captcha", "Неверная последовательность");}	
+		if (!$flag) {$this->SetError("captcha", "Отметьте что вы не робот");}	
       	/*@@@-- END: kcaptcha --@@@@@@@@@@@@*/        
         
         if ($this->errors['err_count'] > 0) {

@@ -27,6 +27,8 @@ define('CART_LINK', 'cart');//корзина
 define('DELIM_NAV', '/');//разделитель навигации
 define('MAIN_NAV', '<a href="/">Главная</a> / ');//главная страница навигации
 define('DKIM', "");//DKIM запись для отправки почты
+define('reCAPTCHA_SECRET', '');//секретный код для рекаптчи
+define('reCAPTCHA_KEY', '');//открытый ключ для рекаптчи
 
 define ("VALIDATE_NOT_EMPTY", 1);
 define ("VALIDATE_USERNAME", 2);

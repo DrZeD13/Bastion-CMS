@@ -728,6 +728,18 @@ class Model_Default
 	
 // функция для капчи имеет смыл тоже перенести в файл функций	
 	function ChecCode($code) 
+	{				
+		$validateCaptcha = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.reCAPTCHA_SECRET.'&response='.$code.'&remoteip='.$_SERVER['REMOTE_ADDR']);
+        $validateCaptcha = json_decode($validateCaptcha);
+        if(isset($validateCaptcha->success)) {
+			return $validateCaptcha->success;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	/*function ChecCode($code) 
 	{
 		//удаляем пробелы
 		$code = trim($code);
@@ -739,7 +751,7 @@ class Model_Default
 		$result = array_intersect ($array_mix, $m_code);		
 		if (strlen($code1)!=strlen($code)){return FALSE;}
 		if (sizeof($result) == sizeof($array_mix)){return TRUE;}else{return FALSE;}
-}
+}*/
 	
 	// установка ошибки
 	// $key - ключ ошибки
@@ -1083,9 +1095,9 @@ class Model_Default
 		{
 			$name = $this->enc ($this->GetValidGP ("name", "Ваше имя", VALIDATE_NOT_EMPTY));
 			/*@@@@@@@@@@@@@@@@@@-- Begin: kcaptcha --@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
-			$code = $this->GetGP("keystring");
+			$code = $this->GetGP("g-recaptcha-response");
 			$flag = $this->ChecCode($code);
-			if (!$flag) {$this->SetError("capcha", "Не верная последовательность");}      	
+			if (!$flag) {$this->SetError("capcha", "Отметьте что вы не робот");}      	
 			/*@@@@@@@@@@@@@@@@@@-- END: kcaptcha --@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/			
 		}
 		$item_id = $this->GetID ("item_id");
@@ -1142,14 +1154,7 @@ class Model_Default
 		{
 			$name = $this->GetGP("name");
 			$disabled="";
-			$capcha = "<script type='text/javascript'>
-								function refreshcapcha() {
-									document.getElementById('capcha-image').src='{$this->siteUrl}capcha/capcha.php?rid=' + Math.random();
-								}
-							</script>				
-
-							<a href='javascript:void(0);' onclick='refreshcapcha();'><img title='нажмите чтобы изменить изображение' src='{$this->siteUrl}capcha/capcha.php' id='capcha-image' alt='нажмите чтобы изменить изображение' /></a><br />
-                                 <input type='text' name='keystring' value='' class='form keywidth' placeholder='Вы не робот?'  required>";
+			$capcha = "<div class='g-recaptcha' data-sitekey='".reCAPTCHA_KEY."'></div>";
 		}
 	   
 	   $data = array (
